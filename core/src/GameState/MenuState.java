@@ -1,5 +1,7 @@
 package GameState;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -16,10 +18,23 @@ public class MenuState extends GameState {
 
     }
     public void update() {
+        inputHandler();
+
     }
     public void draw(){
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.rect(50,50,50,50);
         shapeRenderer.end();
     }
+    public void inputHandler(){
+        if(Gdx.input.isKeyPressed(Input.Keys.ENTER)){
+            select();
+        }
+    }
+
+    public void select(){
+        gsm.setState(1);
+    }
+
+
 }
