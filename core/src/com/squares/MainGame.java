@@ -5,14 +5,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 
 public class MainGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture img;
-	
+	ShapeRenderer shapeRenderer;
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
+        shapeRenderer = new ShapeRenderer();
 		img = new Texture("badlogic.jpg");
 	}
 
@@ -24,5 +27,8 @@ public class MainGame extends ApplicationAdapter {
 		batch.draw(img, 0, 0);
 		batch.draw(img,50,50);
 		batch.end();
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.rect(20,20,50,50);
+        shapeRenderer.end();
 	}
 }
