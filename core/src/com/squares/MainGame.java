@@ -16,7 +16,7 @@ public class MainGame extends ApplicationAdapter {
 
 	@Override
 	public void create () {
-		Log.set(Log.LEVEL_NONE);
+		Log.set(Log.LEVEL_DEBUG);
 		gsm = new GameStateManager();
 		batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();

@@ -101,9 +101,11 @@ public class MenuState extends GameState implements InputProcessor{
 
     @Override
     public boolean keyTyped(char character) {
-        address = address + character;
-        if(character == '') {
-            address = address.substring(0, address.length() - 2);
+        if(Character.isDigit(character) || character == '.') {
+            address = address + character;
+        }
+        if(character == '' && address.length() > 0) {
+            address = address.substring(0, address.length() - 1);
         }
         return false;
     }
