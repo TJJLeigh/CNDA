@@ -47,12 +47,14 @@ public class PongClient extends GameState implements InputProcessor{
         kryo.register(PositionData.class);
         kryo.register(KeyPress.class);
         kryo.register(KeyRelease.class);
+        kryo.register(ConfirmResponse.class);
+
         client.addListener(new Listener(){
             public void received(Connection connection, Object object){
                 if (object instanceof PositionData){
                     PositionData pdata = (PositionData)object;
                     updatePositionData(pdata.paddle1, pdata.paddle2, pdata.ball);
-                    connection.sendUDP(new ConfirmResponse());
+                    connection.sendTCP(new ConfirmResponse());
                 }
             }
         });
