@@ -10,6 +10,7 @@ public class GameStateManager {
     public static final int NUMGAMESTATES = 2;
     public static final int MENUSTATE = 0;
     public static final int PONG = 1;
+    public static final int PONGCLIENT = 2;
 
     public GameStateManager(){
 
@@ -23,6 +24,8 @@ public class GameStateManager {
             gameStates[state] = new MenuState(this);
         else if(state == PONG)
             gameStates[state] = new Pong(this);
+        else if(state == PONGCLIENT)
+            gameStates[state] = new PongClient(this);
     }
     public void unloadState(int state) {
         gameStates[state] = null;
