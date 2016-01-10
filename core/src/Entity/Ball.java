@@ -7,25 +7,18 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
  */
 public class Ball {
     ShapeRenderer shapeRenderer;
-    private final int WIDTH = 50;
-    private final int HEIGHT = 50;
+    private final int RADIUS = 15;
     public int x;
     public int y;
 
-    public Ball(){
+    public Ball(int x, int y){
         shapeRenderer = new ShapeRenderer();
-
-    }
-
-    public void init(int x, int y){
         this.x = x;
         this.y = y;
     }
 
-    public void draw(){
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.rect(x,y,WIDTH,HEIGHT);
-        shapeRenderer.end();
+    public void draw(ShapeRenderer shapeRenderer){
+        shapeRenderer.circle(x,y,RADIUS);
 
     }
     public void update(){

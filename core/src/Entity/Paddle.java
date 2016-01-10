@@ -7,26 +7,26 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
  */
 public class Paddle {
     ShapeRenderer shapeRenderer;
-    private final int WIDTH = 50;
-    private final int HEIGHT = 200;
+    private final int WIDTH = 20;
+    private final int HEIGHT = 100;
     public int x;
     public int y;
 
-    public Paddle(){
+    public Paddle(int x,int y){
+        this.x = x;
+        this.y = y;
         shapeRenderer = new ShapeRenderer();
     }
 
-    public void init(int x,int y){
-        this.x = x;
-        this.y = y;
-    }
-    public void draw(){
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+    public void draw(ShapeRenderer shapeRenderer){
         shapeRenderer.rect(x,y,WIDTH,HEIGHT);
-        shapeRenderer.end();
 
     }
     public void update(){
+
+    }
+
+    private void move(int x,int y){
 
     }
 }

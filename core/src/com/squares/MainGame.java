@@ -25,7 +25,6 @@ public class MainGame extends ApplicationAdapter {
 	public void create () {
 		Log.set(Log.LEVEL_DEBUG);
 		gsm = new GameStateManager();
-		gsm.setState(gsm.MENUSTATE);
 		batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
 		img = new Texture("badlogic.jpg");
@@ -33,7 +32,7 @@ public class MainGame extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		gsm.update();
 	}

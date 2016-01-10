@@ -1,5 +1,6 @@
 package GameState;
 
+import Entity.Ball;
 import Entity.Paddle;
 import Network.PositionData;
 import Network.ServerInput;
@@ -16,10 +17,15 @@ public class Pong extends GameState{
     ShapeRenderer shapeRenderer;
     Paddle paddle1;
     Paddle paddle2;
+    Ball ball;
     Server server;
     public Pong(GameStateManager gsm){
         super(gsm);
         shapeRenderer = new ShapeRenderer();
+        paddle1 = new Paddle(80,300);
+        paddle2 = new Paddle(720,300);
+        ball = new Ball(400,300);
+
     }
     public void init(String args[]){
         server.start();
@@ -37,6 +43,12 @@ public class Pong extends GameState{
 
     }
     public void draw(){
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        paddle1.draw(shapeRenderer);
+        paddle2.draw(shapeRenderer);
+        ball.draw(shapeRenderer);
+        shapeRenderer.end();
+
 
 
     }
