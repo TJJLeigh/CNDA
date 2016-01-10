@@ -1,6 +1,7 @@
 package Entity;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 
 /**
  * Created by Albert on 2016-01-09.
@@ -22,7 +23,7 @@ public class Ball {
     public void draw(ShapeRenderer shapeRenderer){
         shapeRenderer.circle(x,y,RADIUS);
     }
-    public void update(float deltatime){
+    public void update(float deltatime, Rectangle r1, Rectangle r2){
         x = x + xv * deltatime;
         y = y + yv * deltatime;
         if(x < 0){

@@ -10,6 +10,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -19,7 +21,9 @@ import java.io.IOException;
 
 /**
  * Created by Albert on 2016-01-09.
- * netcode written by Jack
+ * netcode written by probably also Albert
+ * and definitely not jack
+ * unless it works
  */
 public class Pong extends GameState implements InputProcessor{
     final int PADDLE_SPEED = 200;
@@ -47,6 +51,7 @@ public class Pong extends GameState implements InputProcessor{
             e.printStackTrace();
         }
         Kryo kryo = server.getKryo();
+        kryo.register(Vector2.class);
         kryo.register(PositionData.class);
         kryo.register(KeyPress.class);
         kryo.register(KeyRelease.class);
@@ -63,6 +68,10 @@ public class Pong extends GameState implements InputProcessor{
                     KeyRelease kr = (KeyRelease)object;
                     keyUp(kr.keycode);
                     connection.sendUDP(new ConfirmResponse());
+                }
+                if(object instanceof ConfirmResponse){
+                    connection.sendUDP(new PositionData(paddle1.x, paddle1.y, paddle2.x, paddle2.y, ball.x, ball.y));
+
                 }
             }
         });
@@ -81,8 +90,9 @@ public class Pong extends GameState implements InputProcessor{
         if (s){
             paddle1.y -= PADDLE_SPEED * deltatime;
         }
-        ball.update(deltatime);
-        server.sendToUDP(54777,new PositionData(paddle1.x, paddle1.y, paddle2.x, paddle2.y, ball.x, ball.y));
+        ball.update(deltatime,
+                new Rectangle(paddle1.x, paddle1.y, 20, 100),
+                new Rectangle(paddle2.x, paddle2.y, 20, 100));
     }
 
     public void draw(){

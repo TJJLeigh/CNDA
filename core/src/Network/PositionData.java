@@ -11,6 +11,7 @@ public class PositionData {
         this.paddle2 = new Vector2(p2x, p2y);
         this.ball = new Vector2(ballx, bally);
     }
+    public PositionData(){}
     public Vector2 paddle1;
     public Vector2 paddle2;
     public Vector2 ball;

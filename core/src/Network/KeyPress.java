@@ -7,5 +7,6 @@ public class KeyPress {
     public KeyPress(int kc){
         this.keycode = kc;
     }
+    public KeyPress(){}
     public int keycode;
 }
