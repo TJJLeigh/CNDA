@@ -1,5 +1,6 @@
 package GameState;
 
+import Entity.Paddle;
 import Network.PositionData;
 import Network.ServerInput;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -13,6 +14,8 @@ import java.io.IOException;
  */
 public class Pong extends GameState{
     ShapeRenderer shapeRenderer;
+    Paddle paddle1;
+    Paddle paddle2;
     Server server;
     public Pong(GameStateManager gsm){
         super(gsm);
@@ -34,9 +37,7 @@ public class Pong extends GameState{
 
     }
     public void draw(){
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.rect(50,50,300,300);
-        shapeRenderer.end();
+
 
     }
 
