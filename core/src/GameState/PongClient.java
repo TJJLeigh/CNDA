@@ -5,6 +5,7 @@ import Entity.Ball;
 import Entity.Paddle;
 import Network.*;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -16,13 +17,15 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
 import java.io.IOException;
-import java.net.InetAddress;
 
 /**
  * Created by Jack on 2016-01-09.
  */
 public class PongClient extends GameState implements InputProcessor{
+    String message = "";
+    String messageSend = "";
     Client client;
+    Boolean inputBeingTyped = false;
     public String hostIP;
     ShapeRenderer shapeRenderer;
     Paddle pad1;
@@ -79,8 +82,6 @@ public class PongClient extends GameState implements InputProcessor{
         // Shitty Handshake
         client.sendUDP(new ConfirmResponse());
         //Start a msg polling thread
-        MsgThread msgThread = new MsgThread(client);
-        msgThread.start();
         //Add a listener to the client that updates the game with position data
         //Received from the server
         client.addListener(new Listener(){
@@ -91,7 +92,7 @@ public class PongClient extends GameState implements InputProcessor{
                 }
                 if(object instanceof ShittyChatMessage){
                     ShittyChatMessage scm = (ShittyChatMessage)object;
-                    System.out.println(scm.msg);
+                    message = scm.msg;
                 }
                 if(object instanceof ScoreData){
                     ScoreData sd = (ScoreData)object;
@@ -115,6 +116,12 @@ public class PongClient extends GameState implements InputProcessor{
         //Test
         font.draw(batch,"" + score1, 700, 550);
         font.draw(batch,"" + score2, 100, 550);
+        if(inputBeingTyped){
+            font.draw(batch, "" + messageSend, 250,100);
+        }
+        font.draw(batch,"" + message,100,100);
+        font.draw(batch,"" + messageSend,100,100 + 20);
+
         batch.end();
     }
     public void updatePositionData(Vector2 pad1_p, Vector2 pad2_p, Vector2 ball_p){
@@ -132,7 +139,20 @@ public class PongClient extends GameState implements InputProcessor{
 
     @Override
     public boolean keyDown(int keycode) {
-        client.sendUDP(new KeyPress(keycode));
+        if(inputBeingTyped){
+            if(keycode == Input.Keys.ENTER){
+                client.sendUDP(new ShittyChatMessage(messageSend));
+                inputBeingTyped = false;
+            }
+        }else{
+            messageSend = "";
+            if (keycode == Input.Keys.ENTER) {
+                inputBeingTyped = true;
+                return false;
+            }
+            client.sendUDP(new KeyPress(keycode));
+
+        }
         return false;
     }
 
@@ -144,6 +164,9 @@ public class PongClient extends GameState implements InputProcessor{
 
     @Override
     public boolean keyTyped(char character) {
+        if(inputBeingTyped){
+            messageSend = messageSend + character;
+        }
         return false;
     }
 

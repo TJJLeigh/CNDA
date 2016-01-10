@@ -26,6 +26,8 @@ import java.util.Scanner;
  */
 public class Pong extends GameState implements InputProcessor{
     final int PADDLE_SPEED = 300;
+    String messageSend = "";
+    String message = "";
     ShapeRenderer shapeRenderer;
     BitmapFont font;
     SpriteBatch batch;
@@ -35,6 +37,7 @@ public class Pong extends GameState implements InputProcessor{
     public float score1;
     public float score2;
     boolean up = false,down = false,w = false,s = false;
+    boolean inputBeingTyped = false;
     Server server;
     ArrayList<Connection> clients;
     public Pong(GameStateManager gsm){
@@ -65,9 +68,6 @@ public class Pong extends GameState implements InputProcessor{
         kryo.register(ShittyChatMessage.class);
         kryo.register(ScoreData.class);
         kryo.register(ConfirmResponse.class);
-
-        MsgThread msgThread = new MsgThread(server);
-        msgThread.start();
         server.addListener(new Listener(){
             public void received(Connection connection, Object object){
                 if(object instanceof KeyPress) {
@@ -85,7 +85,7 @@ public class Pong extends GameState implements InputProcessor{
                 }
                 if(object instanceof ShittyChatMessage){
                     ShittyChatMessage scm = (ShittyChatMessage)object;
-                    System.out.println(scm.msg);
+                    message = scm.msg;
                 }
             }
         });
@@ -124,24 +124,43 @@ public class Pong extends GameState implements InputProcessor{
         //Test
         font.draw(batch,"" + score1, 700, 550);
         font.draw(batch,"" + score2, 100, 550);
+        if(inputBeingTyped){
+            font.draw(batch, "/:" + messageSend, 250,100);
+        }
+        font.draw(batch,"" + message,100,100);
+        font.draw(batch,"" + messageSend,100,100 + 20);
+
         batch.end();
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        if(keycode == Input.Keys.UP){
-            up = true;
-        }
-        if(keycode == Input.Keys.DOWN){
-            down = true;
-        }
-        if(keycode == Input.Keys.W){
-            w = true;
-        }
-        if(keycode == Input.Keys.S){
-            s = true;
+        if (inputBeingTyped){
+            if(keycode == Input.Keys.ENTER){
+                server.sendToAllUDP(new ShittyChatMessage(messageSend));
+                inputBeingTyped = false;
+            }
         }
 
+        else {
+            messageSend = "";
+            if (keycode == Input.Keys.ENTER) {
+                inputBeingTyped = true;
+                return false;
+            }
+            if (keycode == Input.Keys.UP) {
+                up = true;
+            }
+            if (keycode == Input.Keys.DOWN) {
+                down = true;
+            }
+            if (keycode == Input.Keys.W) {
+                w = true;
+            }
+            if (keycode == Input.Keys.S) {
+                s = true;
+            }
+        }
         return false;
     }
 
@@ -179,6 +198,9 @@ public class Pong extends GameState implements InputProcessor{
 
     @Override
     public boolean keyTyped(char character) {
+        if(inputBeingTyped){
+            messageSend = messageSend + character;
+        }
         return false;
     }
 
@@ -205,35 +227,5 @@ public class Pong extends GameState implements InputProcessor{
     @Override
     public boolean scrolled(int amount) {
         return false;
-    }
-}
-
-class MsgThread extends Thread{
-    EndPoint endPoint;
-    Server server;
-    Client client;
-    boolean host;
-    Scanner sc;
-    public MsgThread(EndPoint point){
-        if(point instanceof Server){
-            server = (Server)point;
-            host = true;
-        }
-        if(point instanceof Client){
-            client = (Client)point;
-            host = false;
-        }
-    }
-    public void run(){
-        sc = new Scanner(System.in);
-        while(true){
-            String ms = sc.nextLine();
-            if (host){
-                server.sendToAllUDP(new ShittyChatMessage(ms));
-            }
-            else if (!host){
-                client.sendUDP(new ShittyChatMessage(ms));
-            }
-        }
     }
 }
