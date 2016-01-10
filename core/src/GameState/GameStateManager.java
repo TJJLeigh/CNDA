@@ -39,8 +39,12 @@ public class GameStateManager {
 
     }
     public void update(float deltatime) {
-        if(gameStates[currentState] != null) gameStates[currentState].update(deltatime);
-        if(gameStates[currentState] != null) gameStates[currentState].draw();
+        deltaTimeCheck += deltatime;
+        if(deltaTimeCheck > 1f/60f){
+            if(gameStates[currentState] != null) gameStates[currentState].update(deltaTimeCheck);
+            if(gameStates[currentState] != null) gameStates[currentState].draw();
+            deltaTimeCheck = 0;
+        }
     }
 
 
