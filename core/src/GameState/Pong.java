@@ -2,6 +2,7 @@ package GameState;
 
 import Entity.Ball;
 import Entity.Paddle;
+import Network.ConfirmResponse;
 import Network.KeyPress;
 import Network.KeyRelease;
 import Network.PositionData;
@@ -49,16 +50,19 @@ public class Pong extends GameState implements InputProcessor{
         kryo.register(KeyPress.class);
         kryo.register(KeyRelease.class);
         kryo.register(PositionData.class);
+        kryo.register(ConfirmResponse.class);
+
         server.addListener(new Listener(){
             public void receive(Connection connection, Object object){
                 if(object instanceof KeyPress) {
                     KeyPress kp = (KeyPress)object;
                     keyDown(kp.keycode);
+                    connection.sendUDP(new ConfirmResponse());
                 }
                 if(object instanceof  KeyRelease){
                     KeyRelease kr = (KeyRelease)object;
                     keyUp(kr.keycode);
-
+                    connection.sendUDP(new ConfirmResponse());
                 }
             }
         });

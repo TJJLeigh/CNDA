@@ -3,6 +3,7 @@ package GameState;
 
 import Entity.Ball;
 import Entity.Paddle;
+import Network.ConfirmResponse;
 import Network.KeyPress;
 import Network.KeyRelease;
 import Network.PositionData;
@@ -51,6 +52,7 @@ public class PongClient extends GameState implements InputProcessor{
                 if (object instanceof PositionData){
                     PositionData pdata = (PositionData)object;
                     updatePositionData(pdata.paddle1, pdata.paddle2, pdata.ball);
+                    connection.sendUDP(new ConfirmResponse());
                 }
             }
         });

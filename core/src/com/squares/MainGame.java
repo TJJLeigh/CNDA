@@ -12,22 +12,26 @@ import com.esotericsoftware.minlog.Log;
 
 public class MainGame extends ApplicationAdapter {
 	SpriteBatch batch;
-	Texture img;
 	ShapeRenderer shapeRenderer;
 	GameStateManager gsm;
-	Server server;
+	float deltaTimeCheck;
+
 	@Override
 	public void create () {
 		Log.set(Log.LEVEL_DEBUG);
 		gsm = new GameStateManager();
 		batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
+		deltaTimeCheck = 0f;
 	}
 
 	@Override
 	public void render () {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		gsm.update(Gdx.graphics.getDeltaTime());
+		deltaTimeCheck += Gdx.graphics.getDeltaTime();
+		if(deltaTimeCheck > 1f/60f) {
+			gsm.update(deltaTimeCheck);
+		}
 	}
 }
