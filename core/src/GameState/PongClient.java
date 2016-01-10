@@ -71,14 +71,7 @@ public class PongClient extends GameState implements InputProcessor{
             }
        // }
         // Register classes for serialization
-        Kryo kryo = client.getKryo();
-        kryo.register(Vector2.class);
-        kryo.register(PositionData.class);
-        kryo.register(KeyPress.class);
-        kryo.register(KeyRelease.class);
-        kryo.register(ShittyChatMessage.class);
-        kryo.register(ScoreData.class);
-        kryo.register(ConfirmResponse.class);
+        KryoRegistry.RegisterKryo(client);
         // Shitty Handshake
         client.sendUDP(new ConfirmResponse());
         //Start a msg polling thread
@@ -103,7 +96,7 @@ public class PongClient extends GameState implements InputProcessor{
         });
     }
     @Override
-    public void update(float deltatime) {
+    public void tick(float deltatime) {
     }
     @Override
     public void draw() {

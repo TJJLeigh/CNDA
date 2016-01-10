@@ -10,13 +10,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryonet.*;
+import java.util.Observable;
+import java.util.Observer;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * Created by Albert on 2016-01-09.
@@ -24,11 +20,12 @@ import java.util.Scanner;
  * and definitely not jack
  * unless it works
  */
-public class Pong extends GameState implements InputProcessor{
+public class Pong extends GameState implements InputProcessor, Observer{
     final int PADDLE_SPEED = 300;
     String messageSend = "";
     String message = "";
     ShapeRenderer shapeRenderer;
+    GameStateInformation gameStateInformation;
     BitmapFont font;
     SpriteBatch batch;
     Paddle paddle1;
@@ -38,8 +35,24 @@ public class Pong extends GameState implements InputProcessor{
     public float score2;
     boolean up = false,down = false,w = false,s = false;
     boolean inputBeingTyped = false;
-    Server server;
-    ArrayList<Connection> clients;
+    PongServer server;
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if(arg instanceof KeyPress){
+            KeyPress kp = (KeyPress)arg;
+            System.out.println("I'm receiving key presses");
+            keyDown(kp.keycode);
+        }
+        if(arg instanceof  KeyRelease){
+            KeyRelease kr = (KeyRelease)arg;
+            keyUp(kr.keycode);
+        }
+        if(arg instanceof ShittyChatMessage){
+            ShittyChatMessage scm = (ShittyChatMessage)arg;
+            message = scm.msg;
+        }
+    }
     public Pong(GameStateManager gsm){
         super(gsm);
         shapeRenderer = new ShapeRenderer();
@@ -50,48 +63,14 @@ public class Pong extends GameState implements InputProcessor{
         ball = new Ball(400,300);
         Gdx.input.setInputProcessor(this);
         init(new String[0]);
-        clients = new ArrayList<Connection>();
+        server = new PongServer(this);
+        gameStateInformation = new GameStateInformation();
+        gameStateInformation.addObserver(server);
     }
     public void init(String args[]){
-        server = new Server();
-        new Thread(server).start();
-        try {
-            server.bind(54555, 54777);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Kryo kryo = server.getKryo();
-        kryo.register(Vector2.class);
-        kryo.register(PositionData.class);
-        kryo.register(KeyPress.class);
-        kryo.register(KeyRelease.class);
-        kryo.register(ShittyChatMessage.class);
-        kryo.register(ScoreData.class);
-        kryo.register(ConfirmResponse.class);
-        server.addListener(new Listener(){
-            public void received(Connection connection, Object object){
-                if(object instanceof KeyPress) {
-                    KeyPress kp = (KeyPress)object;
-                    keyDown(kp.keycode);
-                    connection.sendUDP(new ConfirmResponse());
-                }
-                if(object instanceof  KeyRelease){
-                    KeyRelease kr = (KeyRelease)object;
-                    keyUp(kr.keycode);
-                    connection.sendUDP(new ConfirmResponse());
-                }
-                if(object instanceof ConfirmResponse){
-                    clients.add(connection);
-                }
-                if(object instanceof ShittyChatMessage){
-                    ShittyChatMessage scm = (ShittyChatMessage)object;
-                    message = scm.msg;
-                }
-            }
-        });
     }
 
-    public void update(float deltatime) {
+    public void tick(float deltatime) {
         if (up){
             paddle2.y += PADDLE_SPEED * deltatime;
         }
@@ -108,10 +87,7 @@ public class Pong extends GameState implements InputProcessor{
         ball.update(deltatime,
                 new Rectangle(paddle1.x, paddle1.y, 20, 100),
                 new Rectangle(paddle2.x, paddle2.y, 20, 100));
-        /*for(Connection c: clients){
-            c.sendUDP(new PositionData(paddle1.x, paddle1.y, paddle2.x,paddle2.y,ball.x,ball.y));
-        }*/
-        server.sendToAllUDP(new PositionData(paddle1.x, paddle1.y, paddle2.x,paddle2.y,ball.x,ball.y));
+        gameStateInformation.updateGameState(new PositionData(paddle1.x, paddle1.y,paddle2.x, paddle2.y, ball.x,ball.y));
     }
 
     public void draw(){
@@ -137,7 +113,7 @@ public class Pong extends GameState implements InputProcessor{
     public boolean keyDown(int keycode) {
         if (inputBeingTyped){
             if(keycode == Input.Keys.ENTER){
-                server.sendToAllUDP(new ShittyChatMessage(messageSend));
+                gameStateInformation.updateGameState(new ShittyChatMessage(messageSend));
                 inputBeingTyped = false;
             }
         }
@@ -183,13 +159,13 @@ public class Pong extends GameState implements InputProcessor{
     public void scoreUpdate(){
         if (ball.x <= 0){
             score1+= 1;
-            server.sendToAllUDP(new ScoreData(score1,score2));
+            gameStateInformation.updateGameState(new ScoreData(score1,score2));
             ball.x = 400;
             ball.y = 300;
         }
         else if (ball.x >= 800){
             score2+= 1;
-            server.sendToAllUDP(new ScoreData(score1,score2));
+            gameStateInformation.updateGameState(new ScoreData(score1,score2));
             ball.x = 400;
             ball.y = 300;
 

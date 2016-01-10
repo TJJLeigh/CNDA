@@ -33,7 +33,7 @@ public class MenuState extends GameState implements InputProcessor{
     public void init(String args[]){
 
     }
-    public void update(float deltatime) {
+    public void tick(float deltatime) {
     }
     public void draw(){
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
