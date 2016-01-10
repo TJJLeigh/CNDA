@@ -27,13 +27,18 @@ public class PongClient extends GameState implements InputProcessor{
     Ball ball;
     public PongClient(GameStateManager gsm){
         super(gsm);
+        init(new String[0]);
     }
     @Override
     public void init(String[] args) {
+        shapeRenderer = new ShapeRenderer();
+        pad1 = new Paddle(80,300);
+        pad2 = new Paddle(720,300);
+        ball = new Ball(400,300);
         client = new Client();
         client.start();
         try{
-            client.connect(5000,"192.168.0.1",54555,54777);
+            client.connect(5000,"127.0.0.1",54555,54777);
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -56,7 +61,7 @@ public class PongClient extends GameState implements InputProcessor{
     }
     @Override
     public void draw() {
-        shapeRenderer.begin();
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         pad1.draw(shapeRenderer);
         pad2.draw(shapeRenderer);
         ball.draw(shapeRenderer);
