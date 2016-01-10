@@ -6,6 +6,8 @@ import Entity.Paddle;
 import Network.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryo.Kryo;
@@ -26,6 +28,9 @@ public class PongClient extends GameState implements InputProcessor{
     Paddle pad1;
     Paddle pad2;
     Ball ball;
+    BitmapFont font;
+    SpriteBatch batch;
+    public float score1, score2;
     public PongClient(GameStateManager gsm){
         super(gsm);
         init(new String[0]);
@@ -33,13 +38,15 @@ public class PongClient extends GameState implements InputProcessor{
     @Override
     public void init(String[] args) {
         Gdx.input.setInputProcessor(this);
+        font = new BitmapFont();
+        batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         pad1 = new Paddle(80,300);
         pad2 = new Paddle(720,300);
         ball = new Ball(400,300);
         client = new Client();
         new Thread(client).start();
-
+        /*
         InetAddress address = client.discoverHost(54777, 5000);
         if (address != null) {
             System.out.println("a");
@@ -51,13 +58,13 @@ public class PongClient extends GameState implements InputProcessor{
         }catch (IOException e){
             e.printStackTrace();
         }
-        finally {
+        finally {*/
             try{
                 client.connect(5000,"127.0.0.1",54555,54777);
             }catch (IOException e){
                 e.printStackTrace();
             }
-        }
+       // }
         // Register classes for serialization
         Kryo kryo = client.getKryo();
         kryo.register(Vector2.class);
@@ -65,6 +72,7 @@ public class PongClient extends GameState implements InputProcessor{
         kryo.register(KeyPress.class);
         kryo.register(KeyRelease.class);
         kryo.register(ShittyChatMessage.class);
+        kryo.register(ScoreData.class);
         kryo.register(ConfirmResponse.class);
         // Shitty Handshake
         client.sendUDP(new ConfirmResponse());
@@ -83,6 +91,11 @@ public class PongClient extends GameState implements InputProcessor{
                     ShittyChatMessage scm = (ShittyChatMessage)object;
                     System.out.println(scm.msg);
                 }
+                if(object instanceof ScoreData){
+                    ScoreData sd = (ScoreData)object;
+                    score1 = sd.score1;
+                    score2 = sd.score2;
+                }
             }
         });
     }
@@ -96,6 +109,11 @@ public class PongClient extends GameState implements InputProcessor{
         pad2.draw(shapeRenderer);
         ball.draw(shapeRenderer);
         shapeRenderer.end();
+        batch.begin();
+        //Test
+        font.draw(batch,"" + score1, 700, 550);
+        font.draw(batch,"" + score2, 100, 550);
+        batch.end();
     }
     public void updatePositionData(Vector2 pad1_p, Vector2 pad2_p, Vector2 ball_p){
 

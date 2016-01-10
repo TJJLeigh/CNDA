@@ -63,6 +63,7 @@ public class Pong extends GameState implements InputProcessor{
         kryo.register(KeyPress.class);
         kryo.register(KeyRelease.class);
         kryo.register(ShittyChatMessage.class);
+        kryo.register(ScoreData.class);
         kryo.register(ConfirmResponse.class);
 
         MsgThread msgThread = new MsgThread(server);
@@ -163,9 +164,12 @@ public class Pong extends GameState implements InputProcessor{
     public void scoreUpdate(){
         if (ball.x <= 0){
             score2+= 1;
+            server.sendToAllUDP(new ScoreData(score1,score2));
         }
         else if (ball.x >= 800){
             score1+= 1;
+            server.sendToAllUDP(new ScoreData(score1,score2));
+
         }
     }
 

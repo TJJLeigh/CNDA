@@ -29,11 +29,17 @@ public class Ball {
     public void update(float deltatime, Rectangle r1, Rectangle r2) {
         x = x + xv * deltatime;
         y = y + yv * deltatime;
-        if (x < 0 || x > 800) {
-            xv *= -1;
+        if (x < 0){
+            xv = BALL_SPEED;
         }
-        if (y > 600 || y < 0) {
-            yv *= -1;
+        if(x > 800) {
+            xv = -BALL_SPEED;
+        }
+        if (y > 600){
+            yv = -BALL_SPEED;
+        }
+        if(y < 0) {
+            yv = BALL_SPEED;
         }
 
         ballRect.x = x - 15;
