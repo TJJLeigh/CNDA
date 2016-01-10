@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 
-
 /**
  * Created by Albert on 2016-01-09.
  */
@@ -16,6 +15,7 @@ public class MenuState extends GameState implements InputProcessor{
     ShapeRenderer shapeRenderer;
     BitmapFont font;
     SpriteBatch batch;
+    public String address = "";
     private int currentChoice = 0;
     private String[] options = {
             "Host",
@@ -51,6 +51,10 @@ public class MenuState extends GameState implements InputProcessor{
         font.draw(batch,options[0],365,300);
         font.draw(batch,options[1],350,250);
         font.draw(batch,options[2],365,200);
+        if(currentChoice == 1){
+            font.draw(batch,"IP ADDRESS: ",450,300 );
+            font.draw(batch,address,550,300);
+        }
         batch.end();
 
     }
@@ -60,6 +64,7 @@ public class MenuState extends GameState implements InputProcessor{
             gsm.setState(GameStateManager.PONG);
         }
         else if (currentChoice == 1) {
+            gsm.hostIP = address;
             gsm.setState(GameStateManager.PONGCLIENT);
         }
         else if (currentChoice == 2) {
@@ -96,6 +101,10 @@ public class MenuState extends GameState implements InputProcessor{
 
     @Override
     public boolean keyTyped(char character) {
+        address = address + character;
+        if(character == '') {
+            address = address.substring(0, address.length() - 2);
+        }
         return false;
     }
 

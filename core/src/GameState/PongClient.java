@@ -23,7 +23,7 @@ import java.net.InetAddress;
  */
 public class PongClient extends GameState implements InputProcessor{
     Client client;
-    String hostIP;
+    public String hostIP;
     ShapeRenderer shapeRenderer;
     Paddle pad1;
     Paddle pad2;
@@ -38,6 +38,7 @@ public class PongClient extends GameState implements InputProcessor{
     @Override
     public void init(String[] args) {
         Gdx.input.setInputProcessor(this);
+        hostIP = gsm.hostIP;
         font = new BitmapFont();
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
@@ -60,7 +61,8 @@ public class PongClient extends GameState implements InputProcessor{
         }
         finally {*/
             try{
-                client.connect(5000,"127.0.0.1",54555,54777);
+                client.connect(5000,hostIP,54555,54777);
+                //client.connect(5000,"127.0.0.1",54555,54777);
             }catch (IOException e){
                 e.printStackTrace();
             }

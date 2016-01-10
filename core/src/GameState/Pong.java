@@ -163,12 +163,16 @@ public class Pong extends GameState implements InputProcessor{
     }
     public void scoreUpdate(){
         if (ball.x <= 0){
-            score2+= 1;
-            server.sendToAllUDP(new ScoreData(score1,score2));
-        }
-        else if (ball.x >= 800){
             score1+= 1;
             server.sendToAllUDP(new ScoreData(score1,score2));
+            ball.x = 400;
+            ball.y = 300;
+        }
+        else if (ball.x >= 800){
+            score2+= 1;
+            server.sendToAllUDP(new ScoreData(score1,score2));
+            ball.x = 400;
+            ball.y = 300;
 
         }
     }

@@ -12,6 +12,7 @@ public class GameStateManager {
     public static final int PONG = 1;
     public static final int PONGCLIENT = 2;
     float deltaTimeCheck;
+    public String hostIP;
     public GameStateManager(){
 
         gameStates = new GameState[NUMGAMESTATES];
