@@ -54,7 +54,7 @@ public class PongClient extends GameState implements InputProcessor{
                 if (object instanceof PositionData){
                     PositionData pdata = (PositionData)object;
                     updatePositionData(pdata.paddle1, pdata.paddle2, pdata.ball);
-                    connection.sendTCP(new ConfirmResponse());
+                    connection.sendUDP(new ConfirmResponse());
                 }
             }
         });
