@@ -11,12 +11,13 @@ public class GameStateManager {
     public static final int MENUSTATE = 0;
     public static final int PONG = 1;
     public static final int PONGCLIENT = 2;
-
+    float deltaTimeCheck;
     public GameStateManager(){
 
         gameStates = new GameState[NUMGAMESTATES];
         currentState = MENUSTATE;
         loadState(currentState);
+        deltaTimeCheck = 0f;
     }
 
     private void loadState(int state) {
@@ -38,10 +39,12 @@ public class GameStateManager {
 
     }
     public void update(float deltatime) {
-
+        deltaTimeCheck += deltatime;
+        if(deltaTimeCheck > 1f/60f) {
             if(gameStates[currentState] != null) gameStates[currentState].update(deltatime);
-            if(gameStates[currentState] != null) gameStates[currentState].draw();
-
+            deltaTimeCheck = 0;
+        }
+        if(gameStates[currentState] != null) gameStates[currentState].draw();
     }
 
 

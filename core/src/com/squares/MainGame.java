@@ -12,7 +12,6 @@ public class MainGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	ShapeRenderer shapeRenderer;
 	GameStateManager gsm;
-	float deltaTimeCheck;
 
 	@Override
 	public void create () {
@@ -20,17 +19,12 @@ public class MainGame extends ApplicationAdapter {
 		gsm = new GameStateManager();
 		batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
-		deltaTimeCheck = 0f;
 	}
 
 	@Override
 	public void render () {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		deltaTimeCheck += Gdx.graphics.getDeltaTime();
-		if(deltaTimeCheck > 1f/60f) {
-			gsm.update(deltaTimeCheck);
-            deltaTimeCheck = 0;
-		}
+        gsm.update(Gdx.graphics.getDeltaTime());
 	}
 }

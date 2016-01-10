@@ -40,7 +40,7 @@ public class Pong extends GameState implements InputProcessor{
     }
     public void init(String args[]){
         server = new Server();
-        server.start();
+        new Thread(server).start();
         try {
             server.bind(54555, 54777);
         } catch (IOException e) {

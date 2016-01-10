@@ -37,7 +37,7 @@ public class PongClient extends GameState implements InputProcessor{
         pad2 = new Paddle(720,300);
         ball = new Ball(400,300);
         client = new Client();
-        client.start();
+        new Thread(client).start();
         try{
             client.connect(5000,"127.0.0.1",54555,54777);
         }catch (IOException e){
@@ -59,7 +59,6 @@ public class PongClient extends GameState implements InputProcessor{
     }
     @Override
     public void update(float deltatime) {
-
     }
     @Override
     public void draw() {
