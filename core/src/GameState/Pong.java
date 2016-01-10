@@ -26,7 +26,7 @@ import java.io.IOException;
  * unless it works
  */
 public class Pong extends GameState implements InputProcessor{
-    final int PADDLE_SPEED = 200;
+    final int PADDLE_SPEED = 300;
     ShapeRenderer shapeRenderer;
     Paddle paddle1;
     Paddle paddle2;
