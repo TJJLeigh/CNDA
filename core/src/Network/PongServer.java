@@ -48,13 +48,7 @@ public class PongServer implements Observer{
 
         server.addListener(new Listener(){
             public void received(Connection connection, Object object){
-                if(object instanceof KeyPress || object instanceof  KeyRelease) {
-                    gameStateInformation.updateGameState(object);
-                }
-                if(object instanceof ShittyChatMessage){
-                    ShittyChatMessage scm = (ShittyChatMessage)object;
-                    System.out.println(scm.msg);
-                }
+                gameStateInformation.updateGameState(object);
             }
         });    }
 }
