@@ -11,7 +11,6 @@ public class GameStateManager {
     public static final int MENUSTATE = 0;
     public static final int PONG = 1;
     public static final int PONGCLIENT = 2;
-    public float deltaTimeCheck;
 
     public GameStateManager(){
 
@@ -40,9 +39,8 @@ public class GameStateManager {
     }
     public void update(float deltatime) {
 
-            if(gameStates[currentState] != null) gameStates[currentState].update(deltaTimeCheck);
+            if(gameStates[currentState] != null) gameStates[currentState].update(deltatime);
             if(gameStates[currentState] != null) gameStates[currentState].draw();
-            deltaTimeCheck = 0;
 
     }
 
