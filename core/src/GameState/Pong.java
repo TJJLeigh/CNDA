@@ -26,9 +26,10 @@ public class Pong extends GameState{
         paddle1 = new Paddle(80,300);
         paddle2 = new Paddle(720,300);
         ball = new Ball(400,300);
-
+        init(new String[0]);
     }
     public void init(String args[]){
+        server = new Server();
         server.start();
         try {
             server.bind(54555, 54777);
@@ -42,18 +43,15 @@ public class Pong extends GameState{
     }
 
     public void update() {
-
         server.sendToAllUDP(new PositionData(paddle1.x, paddle1.y, paddle2.x, paddle2.y, ball.x, ball.y));
     }
+
     public void draw(){
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         paddle1.draw(shapeRenderer);
         paddle2.draw(shapeRenderer);
         ball.draw(shapeRenderer);
         shapeRenderer.end();
-
-
-
     }
 
 }

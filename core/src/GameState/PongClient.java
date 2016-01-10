@@ -30,6 +30,7 @@ public class PongClient extends GameState implements InputProcessor{
     }
     @Override
     public void init(String[] args) {
+        client = new Client();
         client.start();
         try{
             client.connect(5000,"192.168.0.1",54555,54777);
