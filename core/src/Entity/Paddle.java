@@ -9,8 +9,8 @@ public class Paddle {
     ShapeRenderer shapeRenderer;
     private final int WIDTH = 20;
     private final int HEIGHT = 100;
-    public int x;
-    public int y;
+    public float x;
+    public float y;
 
     public Paddle(int x,int y){
         this.x = x;

@@ -2,8 +2,9 @@ package GameState;
 
 import Entity.Ball;
 import Entity.Paddle;
+import Network.KeyPress;
+import Network.KeyRelease;
 import Network.PositionData;
-import Network.ServerInput;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Server;
@@ -35,12 +36,14 @@ public class Pong extends GameState{
             e.printStackTrace();
         }
         Kryo kryo = server.getKryo();
-        kryo.register(ServerInput.class);
+        kryo.register(KeyPress.class);
+        kryo.register(KeyRelease.class);
         kryo.register(PositionData.class);
     }
 
     public void update() {
 
+        server.sendToAllUDP(new PositionData(paddle1.x, paddle1.y, paddle2.x, paddle2.y, ball.x, ball.y));
     }
     public void draw(){
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);

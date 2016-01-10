@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 public class Ball {
     ShapeRenderer shapeRenderer;
     private final int RADIUS = 15;
-    public int x;
-    public int y;
+    public float x;
+    public float y;
 
     public Ball(int x, int y){
         shapeRenderer = new ShapeRenderer();
@@ -19,7 +19,6 @@ public class Ball {
 
     public void draw(ShapeRenderer shapeRenderer){
         shapeRenderer.circle(x,y,RADIUS);
-
     }
     public void update(){
 
