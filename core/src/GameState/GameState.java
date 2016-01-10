@@ -14,7 +14,7 @@ public abstract class GameState {
         this.gsm = gsm;
     }
     public abstract void init(String args[]);
-    public abstract void update();
+    public abstract void update(float deltatime);
     public abstract void draw();
 
 }

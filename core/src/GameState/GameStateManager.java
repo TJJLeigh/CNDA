@@ -37,8 +37,8 @@ public class GameStateManager {
         loadState(currentState);
 
     }
-    public void update() {
-        if(gameStates[currentState] != null) gameStates[currentState].update();
+    public void update(float deltatime) {
+        if(gameStates[currentState] != null) gameStates[currentState].update(deltatime);
         if(gameStates[currentState] != null) gameStates[currentState].draw();
     }
 
