@@ -3,10 +3,7 @@ package GameState;
 
 import Entity.Ball;
 import Entity.Paddle;
-import Network.ConfirmResponse;
-import Network.KeyPress;
-import Network.KeyRelease;
-import Network.PositionData;
+import Network.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -42,8 +39,10 @@ public class PongClient extends GameState implements InputProcessor{
         ball = new Ball(400,300);
         client = new Client();
         new Thread(client).start();
+
         InetAddress address = client.discoverHost(54777, 5000);
-        if (address == null){
+        if (address != null) {
+            System.out.println("a");
             hostIP = address.toString();
             System.out.println(hostIP);
         }
@@ -65,9 +64,13 @@ public class PongClient extends GameState implements InputProcessor{
         kryo.register(PositionData.class);
         kryo.register(KeyPress.class);
         kryo.register(KeyRelease.class);
+        kryo.register(ShittyChatMessage.class);
         kryo.register(ConfirmResponse.class);
         // Shitty Handshake
         client.sendUDP(new ConfirmResponse());
+        //Start a msg polling thread
+        MsgThread msgThread = new MsgThread(client);
+        msgThread.start();
         //Add a listener to the client that updates the game with position data
         //Received from the server
         client.addListener(new Listener(){
@@ -75,6 +78,10 @@ public class PongClient extends GameState implements InputProcessor{
                 if (object instanceof PositionData){
                     PositionData pdata = (PositionData)object;
                     updatePositionData(pdata.paddle1, pdata.paddle2, pdata.ball);
+                }
+                if(object instanceof ShittyChatMessage){
+                    ShittyChatMessage scm = (ShittyChatMessage)object;
+                    System.out.println(scm.msg);
                 }
             }
         });

@@ -2,10 +2,7 @@ package GameState;
 
 import Entity.Ball;
 import Entity.Paddle;
-import Network.ConfirmResponse;
-import Network.KeyPress;
-import Network.KeyRelease;
-import Network.PositionData;
+import Network.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -13,12 +10,11 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
-import com.esotericsoftware.kryonet.Server;
+import com.esotericsoftware.kryonet.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Created by Albert on 2016-01-09.
@@ -58,8 +54,11 @@ public class Pong extends GameState implements InputProcessor{
         kryo.register(PositionData.class);
         kryo.register(KeyPress.class);
         kryo.register(KeyRelease.class);
+        kryo.register(ShittyChatMessage.class);
         kryo.register(ConfirmResponse.class);
 
+        MsgThread msgThread = new MsgThread(server);
+        msgThread.start();
         server.addListener(new Listener(){
             public void received(Connection connection, Object object){
                 if(object instanceof KeyPress) {
@@ -74,6 +73,10 @@ public class Pong extends GameState implements InputProcessor{
                 }
                 if(object instanceof ConfirmResponse){
                     clients.add(connection);
+                }
+                if(object instanceof ShittyChatMessage){
+                    ShittyChatMessage scm = (ShittyChatMessage)object;
+                    System.out.println(scm.msg);
                 }
             }
         });
@@ -172,5 +175,35 @@ public class Pong extends GameState implements InputProcessor{
     @Override
     public boolean scrolled(int amount) {
         return false;
+    }
+}
+
+class MsgThread extends Thread{
+    EndPoint endPoint;
+    Server server;
+    Client client;
+    boolean host;
+    Scanner sc;
+    public MsgThread(EndPoint point){
+        if(point instanceof Server){
+            server = (Server)point;
+            host = true;
+        }
+        if(point instanceof Client){
+            client = (Client)point;
+            host = false;
+        }
+    }
+    public void run(){
+        sc = new Scanner(System.in);
+        while(true){
+            String ms = sc.nextLine();
+            if (host){
+                server.sendToAllUDP(new ShittyChatMessage(ms));
+            }
+            else if (!host){
+                client.sendUDP(new ShittyChatMessage(ms));
+            }
+        }
     }
 }
