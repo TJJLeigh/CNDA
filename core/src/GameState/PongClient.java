@@ -117,10 +117,10 @@ public class PongClient extends GameState implements InputProcessor{
         font.draw(batch,"" + score1, 700, 550);
         font.draw(batch,"" + score2, 100, 550);
         if(inputBeingTyped){
-            font.draw(batch, "" + messageSend, 250,100);
+            font.draw(batch, "/: " + messageSend, 250,100);
         }
-        font.draw(batch,"" + message,100,100);
-        font.draw(batch,"" + messageSend,100,100 + 20);
+        font.draw(batch,"Received: " + message,100,100);
+        font.draw(batch,"Sent: " + messageSend,100,100 + 20);
 
         batch.end();
     }
@@ -165,7 +165,11 @@ public class PongClient extends GameState implements InputProcessor{
     @Override
     public boolean keyTyped(char character) {
         if(inputBeingTyped){
-            messageSend = messageSend + character;
+            if(character == '' && messageSend.length() > 0) {
+                messageSend = messageSend.substring(0, messageSend.length() - 1);
+            }else{
+                messageSend = messageSend + character;
+            }
         }
         return false;
     }
