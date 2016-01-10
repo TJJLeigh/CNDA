@@ -10,6 +10,8 @@ public class Ball {
     private final int RADIUS = 15;
     public float x;
     public float y;
+    public float xv = 100;
+    public float yv = 100;
 
     public Ball(int x, int y){
         shapeRenderer = new ShapeRenderer();
@@ -20,7 +22,20 @@ public class Ball {
     public void draw(ShapeRenderer shapeRenderer){
         shapeRenderer.circle(x,y,RADIUS);
     }
-    public void update(){
-
+    public void update(float deltatime){
+        x = x + xv * deltatime;
+        y = y + yv * deltatime;
+        if(x < 0){
+            xv = 100;
+        }
+        if(x > 800){
+            xv = -100;
+        }
+        if(y > 600){
+            yv = -100;
+        }
+        if(y < 0){
+            yv = 100;
+        }
     }
 }

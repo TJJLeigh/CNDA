@@ -21,8 +21,7 @@ import java.io.IOException;
  * netcode written by Jack
  */
 public class Pong extends GameState implements InputProcessor{
-    final int PADDLE_SPEED = 50;
-    final int BALL_SPEED = 50;
+    final int PADDLE_SPEED = 200;
     ShapeRenderer shapeRenderer;
     Paddle paddle1;
     Paddle paddle2;
@@ -70,14 +69,15 @@ public class Pong extends GameState implements InputProcessor{
             paddle2.y += PADDLE_SPEED * deltatime;
         }
         if (down){
-            paddle2.y += PADDLE_SPEED * deltatime;
+            paddle2.y -= PADDLE_SPEED * deltatime;
         }
         if (w){
             paddle1.y += PADDLE_SPEED * deltatime;
         }
         if (s){
-            paddle1.y += PADDLE_SPEED * deltatime;
+            paddle1.y -= PADDLE_SPEED * deltatime;
         }
+        ball.update(deltatime);
         server.sendToAllUDP(new PositionData(paddle1.x, paddle1.y, paddle2.x, paddle2.y, ball.x, ball.y));
     }
 
