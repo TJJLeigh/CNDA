@@ -11,6 +11,7 @@ public class GameStateManager {
     public static final int MENUSTATE = 0;
     public static final int PONG = 1;
     public static final int PONGCLIENT = 2;
+    public float deltaTimeCheck;
 
     public GameStateManager(){
 
