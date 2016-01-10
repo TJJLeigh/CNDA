@@ -1,8 +1,5 @@
 package GameState;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-
 /**
  * Created by Albert on 2016-01-09.
  */

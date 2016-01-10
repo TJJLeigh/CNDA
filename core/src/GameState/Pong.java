@@ -6,6 +6,8 @@ import Network.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -25,15 +27,21 @@ import java.util.Scanner;
 public class Pong extends GameState implements InputProcessor{
     final int PADDLE_SPEED = 300;
     ShapeRenderer shapeRenderer;
+    BitmapFont font;
+    SpriteBatch batch;
     Paddle paddle1;
     Paddle paddle2;
     Ball ball;
+    public float score1;
+    public float score2;
     boolean up = false,down = false,w = false,s = false;
     Server server;
     ArrayList<Connection> clients;
     public Pong(GameStateManager gsm){
         super(gsm);
         shapeRenderer = new ShapeRenderer();
+        batch = new SpriteBatch();
+        font = new BitmapFont();
         paddle1 = new Paddle(80,300);
         paddle2 = new Paddle(720,300);
         ball = new Ball(400,300);
@@ -95,6 +103,7 @@ public class Pong extends GameState implements InputProcessor{
         if (s){
             paddle1.y -= PADDLE_SPEED * deltatime;
         }
+        scoreUpdate();
         ball.update(deltatime,
                 new Rectangle(paddle1.x, paddle1.y, 20, 100),
                 new Rectangle(paddle2.x, paddle2.y, 20, 100));
@@ -110,6 +119,11 @@ public class Pong extends GameState implements InputProcessor{
         paddle2.draw(shapeRenderer);
         ball.draw(shapeRenderer);
         shapeRenderer.end();
+        batch.begin();
+        //Test
+        font.draw(batch,"" + score1, 700, 550);
+        font.draw(batch,"" + score2, 100, 550);
+        batch.end();
     }
 
     @Override
@@ -145,6 +159,14 @@ public class Pong extends GameState implements InputProcessor{
             s = false;
         }
         return false;
+    }
+    public void scoreUpdate(){
+        if (ball.x <= 0){
+            score2+= 1;
+        }
+        else if (ball.x >= 800){
+            score1+= 1;
+        }
     }
 
     @Override
