@@ -17,12 +17,14 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
 import java.io.IOException;
+import java.net.InetAddress;
 
 /**
  * Created by Jack on 2016-01-09.
  */
 public class PongClient extends GameState implements InputProcessor{
     Client client;
+    String hostIP;
     ShapeRenderer shapeRenderer;
     Paddle pad1;
     Paddle pad2;
@@ -40,31 +42,45 @@ public class PongClient extends GameState implements InputProcessor{
         ball = new Ball(400,300);
         client = new Client();
         new Thread(client).start();
+        InetAddress address = client.discoverHost(54777, 5000);
+        if (address == null){
+            hostIP = address.toString();
+            System.out.println(hostIP);
+        }
         try{
-            client.connect(5000,"142.1.84.31",54555,54777);
+            client.connect(5000,hostIP,54555,54777);
         }catch (IOException e){
             e.printStackTrace();
         }
+        finally {
+            try{
+                client.connect(5000,"127.0.0.1",54555,54777);
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        // Register classes for serialization
         Kryo kryo = client.getKryo();
         kryo.register(Vector2.class);
         kryo.register(PositionData.class);
         kryo.register(KeyPress.class);
         kryo.register(KeyRelease.class);
         kryo.register(ConfirmResponse.class);
+        // Shitty Handshake
         client.sendUDP(new ConfirmResponse());
+        //Add a listener to the client that updates the game with position data
+        //Received from the server
         client.addListener(new Listener(){
             public void received(Connection connection, Object object){
                 if (object instanceof PositionData){
                     PositionData pdata = (PositionData)object;
                     updatePositionData(pdata.paddle1, pdata.paddle2, pdata.ball);
-                    connection.sendUDP(new ConfirmResponse());
                 }
             }
         });
     }
     @Override
     public void update(float deltatime) {
-        client.sendUDP(new ConfirmResponse());
     }
     @Override
     public void draw() {

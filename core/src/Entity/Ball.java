@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 public class Ball {
 
     private final int RADIUS = 15;
+    private final int BALL_SPEED = 150;
     public float x;
     public float y;
     public float xv = 200;

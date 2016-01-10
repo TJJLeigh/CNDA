@@ -18,6 +18,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by Albert on 2016-01-09.
@@ -33,6 +34,7 @@ public class Pong extends GameState implements InputProcessor{
     Ball ball;
     boolean up = false,down = false,w = false,s = false;
     Server server;
+    ArrayList<Connection> clients;
     public Pong(GameStateManager gsm){
         super(gsm);
         shapeRenderer = new ShapeRenderer();
@@ -41,6 +43,7 @@ public class Pong extends GameState implements InputProcessor{
         ball = new Ball(400,300);
         Gdx.input.setInputProcessor(this);
         init(new String[0]);
+        clients = new ArrayList<Connection>();
     }
     public void init(String args[]){
         server = new Server();
@@ -70,8 +73,7 @@ public class Pong extends GameState implements InputProcessor{
                     connection.sendUDP(new ConfirmResponse());
                 }
                 if(object instanceof ConfirmResponse){
-                    connection.sendUDP(new PositionData(paddle1.x, paddle1.y, paddle2.x, paddle2.y, ball.x, ball.y));
-
+                    clients.add(connection);
                 }
             }
         });
@@ -93,6 +95,10 @@ public class Pong extends GameState implements InputProcessor{
         ball.update(deltatime,
                 new Rectangle(paddle1.x, paddle1.y, 20, 100),
                 new Rectangle(paddle2.x, paddle2.y, 20, 100));
+        /*for(Connection c: clients){
+            c.sendUDP(new PositionData(paddle1.x, paddle1.y, paddle2.x,paddle2.y,ball.x,ball.y));
+        }*/
+        server.sendToAllUDP(new PositionData(paddle1.x, paddle1.y, paddle2.x,paddle2.y,ball.x,ball.y));
     }
 
     public void draw(){
