@@ -13,7 +13,7 @@ public abstract class GameState {
     public GameState(GameStateManager gsm) {
         this.gsm = gsm;
     }
-    public abstract void init();
+    public abstract void init(String args[]);
     public abstract void update();
     public abstract void draw();
 

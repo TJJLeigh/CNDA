@@ -14,7 +14,7 @@ public class MenuState extends GameState {
         super(gsm);
         shapeRenderer = new ShapeRenderer();
     }
-    public void init(){
+    public void init(String args[]){
 
     }
     public void update() {
