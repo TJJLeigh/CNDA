@@ -56,7 +56,7 @@ public class PongClient extends GameState implements InputProcessor{
         });
     }
     @Override
-    public void update() {
+    public void update(float deltatime) {
 
     }
     @Override

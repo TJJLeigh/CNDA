@@ -27,9 +27,7 @@ public class MenuState extends GameState implements InputProcessor{
     public void init(String args[]){
 
     }
-    public void update() {
-        inputHandler();
-
+    public void update(float deltatime) {
     }
     public void draw(){
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -44,8 +42,6 @@ public class MenuState extends GameState implements InputProcessor{
         }
         shapeRenderer.end();
 
-    }
-    public void inputHandler(){
     }
 
     private void select() {

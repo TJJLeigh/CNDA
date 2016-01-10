@@ -65,9 +65,18 @@ public class Pong extends GameState implements InputProcessor{
         });
     }
 
-    public void update() {
+    public void update(float deltatime) {
         if (up){
-            paddle2.y += PADDLE_SPEED;
+            paddle2.y += PADDLE_SPEED * deltatime;
+        }
+        if (down){
+            paddle2.y += PADDLE_SPEED * deltatime;
+        }
+        if (w){
+            paddle1.y += PADDLE_SPEED * deltatime;
+        }
+        if (s){
+            paddle1.y += PADDLE_SPEED * deltatime;
         }
         server.sendToAllUDP(new PositionData(paddle1.x, paddle1.y, paddle2.x, paddle2.y, ball.x, ball.y));
     }
