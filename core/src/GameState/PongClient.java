@@ -41,7 +41,7 @@ public class PongClient extends GameState implements InputProcessor{
         client = new Client();
         new Thread(client).start();
         try{
-            client.connect(5000,"127.0.0.1",54555,54777);
+            client.connect(5000,"142.1.84.31",54555,54777);
         }catch (IOException e){
             e.printStackTrace();
         }
