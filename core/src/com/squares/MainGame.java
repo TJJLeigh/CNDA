@@ -25,11 +25,12 @@ public class MainGame extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		deltaTimeCheck += Gdx.graphics.getDeltaTime();
 		if(deltaTimeCheck > 1f/60f) {
 			gsm.update(deltaTimeCheck);
+            deltaTimeCheck = 0;
 		}
 	}
 }
