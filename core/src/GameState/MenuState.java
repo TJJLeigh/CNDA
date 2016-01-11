@@ -1,11 +1,14 @@
 package GameState;
 
+import Entity.Ball;
+import Entity.Paddle;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 
 
 /**
@@ -15,6 +18,9 @@ public class MenuState extends GameState implements InputProcessor{
     ShapeRenderer shapeRenderer;
     BitmapFont font;
     SpriteBatch batch;
+    Ball ball;
+    Paddle p1;
+    Paddle p2;
     public String address = "";
     private int currentChoice = 0;
     private String[] options = {
@@ -27,6 +33,9 @@ public class MenuState extends GameState implements InputProcessor{
         shapeRenderer = new ShapeRenderer();
         font = new BitmapFont();
         batch = new SpriteBatch();
+        p1 = new Paddle(80,300);
+        p2 = new Paddle(720,300);
+        ball = new Ball(400,300);
         Gdx.input.setInputProcessor(this);
 
     }
@@ -34,9 +43,16 @@ public class MenuState extends GameState implements InputProcessor{
 
     }
     public void tick(float deltatime) {
+        move();
+        ball.update(deltatime,
+                new Rectangle(p1.x, p1.y, 20, 100),
+                new Rectangle(p2.x, p2.y, 20, 100));
     }
     public void draw(){
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        p1.draw(shapeRenderer);
+        p2.draw(shapeRenderer);
+        ball.draw(shapeRenderer);
         if(currentChoice == 0){
             shapeRenderer.circle(425,295,15);
         }
@@ -69,6 +85,18 @@ public class MenuState extends GameState implements InputProcessor{
         }
         else if (currentChoice == 2) {
             System.exit(0);
+        }
+    }
+
+    public void move(){
+        if(p1.y + 100 < ball.y){
+            p1.y+=5.0;
+        }else if(p1.y + 100 > ball.y){
+            p1.y-=5.0;
+        }if(p2.y + 100 < ball.y){
+            p2.y+=4.0;
+        }else if(p2.y + 100 > ball.y){
+            p2.y-=4.0;
         }
     }
 
