@@ -36,6 +36,8 @@ public class MenuState extends GameState implements InputProcessor{
         p1 = new Paddle(80,300);
         p2 = new Paddle(720,300);
         ball = new Ball(400,300);
+        ball.xv = 0;
+        ball.yv = 0;
         Gdx.input.setInputProcessor(this);
 
     }
@@ -54,13 +56,16 @@ public class MenuState extends GameState implements InputProcessor{
         p2.draw(shapeRenderer);
         ball.draw(shapeRenderer);
         if(currentChoice == 0){
-            shapeRenderer.circle(425,295,15);
+            ball.x = 425;
+            ball.y = 295;
         }
         else if(currentChoice == 1){
-            shapeRenderer.circle(425,250,15);
+            ball.x = 425;
+            ball.y = 250;
         }
         else if(currentChoice == 2){
-            shapeRenderer.circle(425,200,15);
+            ball.x = 425;
+            ball.y = 200;
         }
         shapeRenderer.end();
         batch.begin();
@@ -68,7 +73,7 @@ public class MenuState extends GameState implements InputProcessor{
         font.draw(batch,options[1],350,250);
         font.draw(batch,options[2],365,200);
         if(currentChoice == 1){
-            font.draw(batch,"IP ADDRESS: ",450,300 );
+            font.draw(batch,"IP Address: ",450,300 );
             font.draw(batch,address,550,300);
         }
         batch.end();
@@ -89,14 +94,14 @@ public class MenuState extends GameState implements InputProcessor{
     }
 
     public void move(){
-        if(p1.y + 100 < ball.y){
-            p1.y+=5.0;
-        }else if(p1.y + 100 > ball.y){
-            p1.y-=5.0;
-        }if(p2.y + 100 < ball.y){
-            p2.y+=4.0;
-        }else if(p2.y + 100 > ball.y){
-            p2.y-=4.0;
+        if(p1.y + 50 < ball.y){
+            p1.y+=2.0;
+        }else if(p1.y + 50 > ball.y){
+            p1.y-=2.0;
+        }if(p2.y + 50 < ball.y){
+            p2.y+=2.0;
+        }else if(p2.y + 50 > ball.y){
+            p2.y-=2.0;
         }
     }
 
